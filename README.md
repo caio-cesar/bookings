@@ -9,7 +9,7 @@
 
 # Running the application
 
-Every time the application is start/restarted it will create an in memory database using H2,  
+Every time the application is started/restarted it will create an in memory database using H2,  
 so you will have to re-create your Entities.
 
 # Testing the flow #
