@@ -1,11 +1,11 @@
-package com.ontravel.bookings.application.usecase;
+package com.ontravel.bookings.application.service;
 
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.ontravel.bookings.application.usecase.validation.PeriodValidator;
-import com.ontravel.bookings.application.usecase.validation.exception.BusinessExceptionFactory;
+import com.ontravel.bookings.application.validation.PeriodValidator;
+import com.ontravel.bookings.application.validation.exception.BusinessExceptionFactory;
 import com.ontravel.bookings.dto.CreatePropertyBlockInputDTO;
 import com.ontravel.bookings.dto.PropertyBlockDTO;
 import com.ontravel.bookings.dto.UpdatePropertyBlockInputDTO;
@@ -46,8 +46,8 @@ public class PropertyBlockService {
 	}
 
 	private void validateUpdateInput(Long id, UpdatePropertyBlockInputDTO input) {
-		PeriodValidator.validate(input.getStartDate(), input.getEndDate());
 		validateEntityNotFound(id);
+		PeriodValidator.validate(input.getStartDate(), input.getEndDate());
 	}
 
 	private PropertyBlockDTO saveAndConvertToDTO(PropertyBlock entity) {

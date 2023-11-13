@@ -14,14 +14,21 @@ import com.ontravel.bookings.entity.Reservation;
 @Mapper(componentModel = "spring")
 public interface ReservationMapper {
 	
+	@Mapping(target = "rebookedId", source = "rebooked.id")
 	ReservationDTO toDTO(Reservation reservation);
 	
 	List<ReservationDTO> toDTO(List<Reservation> reservations);
 	
+	@Mapping(target = "id", ignore = true)
 	@Mapping(target = "property", source = "property")
 	Reservation inputToEntity(CreateReservationInputDTO input, Property property);
 	
-	@Mapping(target = "property.id", source = "input.propertyId")
+	@Mapping(target = "id", ignore = true)
+	@Mapping(target = "property", source = "property")
 	Reservation inputToEntity(UpdateReservationInputDTO input, Long id, Property property);
+	
+	@Mapping(target = "id", ignore = true)
+	@Mapping(target = "property", source = "property")
+	Reservation inputToEntity(UpdateReservationInputDTO input, Property property);
 	
 }

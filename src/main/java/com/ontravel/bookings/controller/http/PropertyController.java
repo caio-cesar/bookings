@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ontravel.bookings.application.usecase.PropertyService;
+import com.ontravel.bookings.application.service.PropertyService;
 import com.ontravel.bookings.controller.util.ControllerPath;
 import com.ontravel.bookings.dto.CreatePropertyInputDTO;
 import com.ontravel.bookings.dto.PropertyDTO;

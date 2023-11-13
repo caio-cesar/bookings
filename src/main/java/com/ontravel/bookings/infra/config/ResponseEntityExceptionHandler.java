@@ -9,10 +9,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.ontravel.bookings.application.usecase.validation.dto.ErrorListDTO;
-import com.ontravel.bookings.application.usecase.validation.dto.ErrorMessageDTO;
-import com.ontravel.bookings.application.usecase.validation.exception.BusinessException;
-import com.ontravel.bookings.application.usecase.validation.exception.EntityNotFoundException;
+import com.ontravel.bookings.application.validation.dto.ErrorListDTO;
+import com.ontravel.bookings.application.validation.dto.ErrorMessageDTO;
+import com.ontravel.bookings.application.validation.exception.BusinessException;
+import com.ontravel.bookings.application.validation.exception.EntityNotFoundException;
 
 @ControllerAdvice
 public class ResponseEntityExceptionHandler {

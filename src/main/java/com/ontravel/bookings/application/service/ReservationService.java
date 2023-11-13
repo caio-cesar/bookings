@@ -1,12 +1,13 @@
-package com.ontravel.bookings.application.usecase;
+package com.ontravel.bookings.application.service;
 
 import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.ontravel.bookings.application.usecase.validation.PeriodValidator;
-import com.ontravel.bookings.application.usecase.validation.exception.BusinessExceptionFactory;
+import com.ontravel.bookings.application.validation.PeriodValidator;
+import com.ontravel.bookings.application.validation.exception.BusinessExceptionFactory;
 import com.ontravel.bookings.dto.CreateReservationInputDTO;
 import com.ontravel.bookings.dto.ReservationDTO;
 import com.ontravel.bookings.dto.UpdateReservationInputDTO;
@@ -82,20 +83,48 @@ public class ReservationService {
 	}
 
 	private void validateUpdateInput(Long id, UpdateReservationInputDTO input) {
+		validateEntityNotFound(id);
 		PeriodValidator.validate(input.getStartDate(), input.getEndDate());
 		validateOverlappingDate(input.getStartDate(), input.getEndDate(), input.getPropertyId(), id);
 	}
 
+	private void validateRebookInput(UpdateReservationInputDTO input) {
+		PeriodValidator.validate(input.getStartDate(), input.getEndDate());
+		validateOverlappingDate(input.getStartDate(), input.getEndDate(), input.getPropertyId());
+	}
+
+	@Transactional
+	public ReservationDTO rebook(Long id, UpdateReservationInputDTO input) {
+		var reservation = findById(id);
+		validateRebookInput(input);
+		validateRebookStatus(reservation);
+		var property = findPropertyById(input.getPropertyId());
+		var entity = mapper.inputToEntity(input, property);
+		entity = repository.save(entity);
+		reservation.setStatus(ReservationStatus.REBOOKED);
+		reservation.setRebooked(entity);
+		repository.save(reservation);
+		return mapper.toDTO(entity);
+	}
+
+	private void validateRebookStatus(Reservation reservation) {
+		if (reservation.getStatus() == ReservationStatus.REBOOKED) {
+			throw BusinessExceptionFactory.createInvalidRebookingException();
+		}
+	}
+
 	public ReservationDTO cancel(Long id) {
 		var entity = findById(id);
-
-		if (entity.getStatus() != ReservationStatus.ACTIVE) {
-			throw BusinessExceptionFactory.createInvalidCancellationExcepion();
-		}
-
+		validateCancellationStatus(entity);
 		entity.setStatus(ReservationStatus.CANCELLED);
 		entity = repository.save(entity);
 		return mapper.toDTO(entity);
+	}
+
+	private void validateCancellationStatus(Reservation entity) {
+		if (entity.getStatus() != ReservationStatus.ACTIVE) {
+			throw BusinessExceptionFactory.createInvalidCancellationExcepion();
+		}
 	}
 
 	private Reservation findById(Long id) {
@@ -105,5 +134,11 @@ public class ReservationService {
 	private Property findPropertyById(Long id) {
 		return propertyRepository.findById(id).orElseThrow(BusinessExceptionFactory::createPropertyNotFound);
 	}
-
+	
+	private void validateEntityNotFound(Long id) {
+		if (!repository.existsById(id)) {
+			throw BusinessExceptionFactory.createEntityNotFound();
+		}
+	}
+	
 }

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ontravel.bookings.application.usecase.PropertyBlockService;
+import com.ontravel.bookings.application.service.PropertyBlockService;
 import com.ontravel.bookings.controller.util.ControllerPath;
 import com.ontravel.bookings.dto.CreatePropertyBlockInputDTO;
 import com.ontravel.bookings.dto.PropertyBlockDTO;

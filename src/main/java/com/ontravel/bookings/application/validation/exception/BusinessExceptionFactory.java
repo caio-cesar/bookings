@@ -1,4 +1,4 @@
-package com.ontravel.bookings.application.usecase.validation.exception;
+package com.ontravel.bookings.application.validation.exception;
 
 import lombok.experimental.UtilityClass;
 
@@ -23,6 +23,14 @@ public class BusinessExceptionFactory {
 	
 	public static BusinessException createInvalidPeriodException() {
 		return new InvalidPeriodException("Invalid period. Start date must be before or equal to the end date.");
+	}
+	
+	public static BusinessException createPastDateException() {
+		return new PastDateException("Please choose a date in the future for your reservation");
+	}
+	
+	public static BusinessException createInvalidRebookingException() {
+		return new InvalidPeriodException("Only active and cancelled reservations can be rebooked.");
 	}
 	
 	public static BusinessException create(String message) {

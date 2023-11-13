@@ -1,4 +1,4 @@
-package com.ontravel.bookings.application.usecase.validation.dto;
+package com.ontravel.bookings.application.validation.dto;
 
 import java.util.List;
 

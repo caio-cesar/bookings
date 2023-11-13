@@ -18,9 +18,11 @@ public interface PropertyBlockMapper {
 	
 	List<PropertyBlockDTO> toDTO(List<PropertyBlock> property);
 	
+	@Mapping(target = "id", ignore = true)
 	@Mapping(target = "property", source = "property")
 	PropertyBlock inputToEntity(CreatePropertyBlockInputDTO input, Property property);
 	
+	@Mapping(target = "id", ignore = true)
 	@Mapping(target = "property", source = "property")
 	PropertyBlock inputToEntity(UpdatePropertyBlockInputDTO input, Property property);
 	

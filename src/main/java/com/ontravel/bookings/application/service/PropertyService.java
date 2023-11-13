@@ -1,4 +1,4 @@
-package com.ontravel.bookings.application.usecase;
+package com.ontravel.bookings.application.service;
 
 import java.util.List;
 

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ontravel.bookings.application.usecase.ReservationService;
+import com.ontravel.bookings.application.service.ReservationService;
 import com.ontravel.bookings.controller.util.ControllerPath;
 import com.ontravel.bookings.dto.CreateReservationInputDTO;
 import com.ontravel.bookings.dto.ReservationDTO;
@@ -47,6 +47,14 @@ public class ReservationController {
 			@RequestBody @Valid UpdateReservationInputDTO input) {
 		var updated = service.update(id, input);
 		return ResponseEntity.ok(updated);
+	}
+	
+	@PostMapping("/{id}/rebook")
+	public ResponseEntity<ReservationDTO> rebook(
+			@PathVariable Long id, 
+			@RequestBody @Valid UpdateReservationInputDTO input) {
+		var reeboked = service.rebook(id, input);
+		return ResponseEntity.ok(reeboked);
 	}
 	
 	@DeleteMapping("/{id}")
