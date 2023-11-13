@@ -20,6 +20,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 			+ " AND r1.property.id = :propertyId "
 			+ " AND r1.status = :status ";
 
+	String UPDATED_RESERVATION = " AND r1.id != :reservationId ";
+	
 	String PROPERTY_BLOCK_QUERY = " SELECT r2.property.id FROM PropertyBlock r2 " +
 			"  WHERE ((r2.startDate BETWEEN :startDate AND :endDate) OR " +
 			"         (r2.endDate BETWEEN :startDate AND :endDate) OR " +
@@ -30,11 +32,23 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 	String OVERLAPPING_RESERVATION_QUERY = " SELECT DISTINCT p.id FROM Property p WHERE p.id IN (" 
 	+ RESERVATION_QUERY + ") OR p.id IN (" + PROPERTY_BLOCK_QUERY + ") ";
 	
+	String OVERLAPPING_RESERVATION_QUERY_UPDATED = " SELECT DISTINCT p.id FROM Property p WHERE p.id IN (" 
+	+ RESERVATION_QUERY + UPDATED_RESERVATION + ") OR p.id IN (" + PROPERTY_BLOCK_QUERY + ") ";
+	
 	@Query(OVERLAPPING_RESERVATION_QUERY)
 	Optional<Long> hasOverlappingReservationsOrBlocks(
 			@Param("startDate") LocalDate startDate,
 			@Param("endDate") LocalDate endDate,
 			@Param("propertyId") Long propertyId,
 			@Param("status") ReservationStatus status);
+	
+	
+	@Query(OVERLAPPING_RESERVATION_QUERY_UPDATED)
+	Optional<Long> hasOverlappingReservationsOrBlocks(
+			@Param("startDate") LocalDate startDate,
+			@Param("endDate") LocalDate endDate,
+			@Param("propertyId") Long propertyId,
+			@Param("status") ReservationStatus status,
+			@Param("reservationId") Long reservationId);
 
 }

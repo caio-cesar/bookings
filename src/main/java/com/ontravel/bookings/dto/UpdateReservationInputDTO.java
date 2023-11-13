@@ -6,8 +6,8 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-public class CreateReservationInputDTO {
-
+public class UpdateReservationInputDTO {
+	
 	private Long propertyId; 
 	
 	private LocalDate startDate;
