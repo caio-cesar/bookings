@@ -7,6 +7,7 @@ import org.mapstruct.Mapping;
 
 import com.ontravel.bookings.dto.CreatePropertyBlockInputDTO;
 import com.ontravel.bookings.dto.PropertyBlockDTO;
+import com.ontravel.bookings.dto.UpdatePropertyBlockInputDTO;
 import com.ontravel.bookings.entity.PropertyBlock;
 
 @Mapper(componentModel = "spring")
@@ -18,5 +19,8 @@ public interface PropertyBlockMapper {
 	
 	@Mapping(target = "property.id", source = "input.propertyId")
 	PropertyBlock inputToEntity(CreatePropertyBlockInputDTO input);
+	
+	@Mapping(target = "property.id", source = "input.propertyId")
+	PropertyBlock inputToEntity(UpdatePropertyBlockInputDTO input);
 	
 }

@@ -1,4 +1,4 @@
-package com.ontravel.bookings.application.usecase.validation;
+package com.ontravel.bookings.application.usecase.validation.exception;
 
 public class InvalidCancellationException extends BusinessException {
 

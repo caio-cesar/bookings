@@ -2,7 +2,7 @@ package com.ontravel.bookings.application.usecase.validation.dto;
 
 import java.util.List;
 
-import com.ontravel.bookings.application.usecase.validation.BusinessException;
+import com.ontravel.bookings.application.usecase.validation.exception.BusinessException;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

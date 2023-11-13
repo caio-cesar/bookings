@@ -27,10 +27,6 @@ public class ReservationController {
 	@Autowired
 	private ReservationService service;
 	
-	@GetMapping
-	public ResponseEntity<List<ReservationDTO>> getAllReservations() {
-		return ResponseEntity.ok(service.findAll());
-	}
 	
 	@PostMapping
 	public ResponseEntity<ReservationDTO> create(@RequestBody CreateReservationInputDTO input) {
@@ -38,8 +34,13 @@ public class ReservationController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(created);
 	}
 	
+	@GetMapping
+	public ResponseEntity<List<ReservationDTO>> getAllReservations() {
+		return ResponseEntity.ok(service.findAll());
+	}
+	
 	@PutMapping("/{id}")
-	public ResponseEntity<ReservationDTO> create(
+	public ResponseEntity<ReservationDTO> update(
 			@PathVariable Long id, 
 			@RequestBody UpdateReservationInputDTO input) {
 		var updated = service.update(id, input);

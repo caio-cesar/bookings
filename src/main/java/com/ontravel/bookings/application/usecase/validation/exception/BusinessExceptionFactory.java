@@ -1,4 +1,4 @@
-package com.ontravel.bookings.application.usecase.validation;
+package com.ontravel.bookings.application.usecase.validation.exception;
 
 import lombok.experimental.UtilityClass;
 
@@ -17,7 +17,12 @@ public class BusinessExceptionFactory {
 		return new OverlappingDateException("You can only cancel active reservations.");
 	}
 	
+	public static BusinessException createInvalidPeriodException() {
+		return new InvalidPeriodException("Invalid period. Start date must be before or equal to the end date.");
+	}
+	
 	public static BusinessException create(String message) {
 		return new BusinessException(message);
 	}
+	
 }

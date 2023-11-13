@@ -5,9 +5,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.ontravel.bookings.application.usecase.validation.BusinessException;
-import com.ontravel.bookings.application.usecase.validation.EntityNotFoundException;
 import com.ontravel.bookings.application.usecase.validation.dto.ErrorListDTO;
+import com.ontravel.bookings.application.usecase.validation.exception.BusinessException;
+import com.ontravel.bookings.application.usecase.validation.exception.EntityNotFoundException;
 
 @ControllerAdvice
 public class ResponseEntityExceptionHandler {

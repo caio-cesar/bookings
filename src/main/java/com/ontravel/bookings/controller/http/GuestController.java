@@ -23,15 +23,15 @@ public class GuestController {
 	@Autowired
 	private GuestService service;
 	
-	@GetMapping
-	public ResponseEntity<List<GuestDTO>> getAllGuests() {
-		return ResponseEntity.ok(service.findAll());
-	}
-	
 	@PostMapping
 	public ResponseEntity<GuestDTO> create(@RequestBody CreateGuestInputDTO input) {
 		var created = service.create(input);
 		return ResponseEntity.status(HttpStatus.CREATED).body(created);
 	}
 	
+	@GetMapping
+	public ResponseEntity<List<GuestDTO>> getAllGuests() {
+		return ResponseEntity.ok(service.findAll());
+	}
+
 }
