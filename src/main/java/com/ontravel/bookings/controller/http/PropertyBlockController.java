@@ -2,6 +2,8 @@ package com.ontravel.bookings.controller.http;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +30,7 @@ public class PropertyBlockController {
 	private PropertyBlockService service;
 	
 	@PostMapping
-	public ResponseEntity<PropertyBlockDTO> create(@RequestBody CreatePropertyBlockInputDTO input) {
+	public ResponseEntity<PropertyBlockDTO> create(@RequestBody @Valid CreatePropertyBlockInputDTO input) {
 		var created = service.create(input);
 		return ResponseEntity.status(HttpStatus.CREATED).body(created);
 	}
@@ -41,7 +43,7 @@ public class PropertyBlockController {
 	@PutMapping("/{id}")
 	public ResponseEntity<PropertyBlockDTO> update(
 			@PathVariable Long id, 
-			@RequestBody UpdatePropertyBlockInputDTO input) {
+			@RequestBody @Valid UpdatePropertyBlockInputDTO input) {
 		var updated = service.update(id, input);
 		return ResponseEntity.ok(updated);
 	}

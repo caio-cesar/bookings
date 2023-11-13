@@ -2,6 +2,8 @@ package com.ontravel.bookings.controller.http;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +31,7 @@ public class PropertyController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<PropertyDTO> create(@RequestBody CreatePropertyInputDTO input) {
+	public ResponseEntity<PropertyDTO> create(@RequestBody @Valid CreatePropertyInputDTO input) {
 		var created = service.create(input);
 		return ResponseEntity.status(HttpStatus.CREATED).body(created);
 	}

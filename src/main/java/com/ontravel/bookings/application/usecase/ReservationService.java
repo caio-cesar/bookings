@@ -10,9 +10,11 @@ import com.ontravel.bookings.application.usecase.validation.exception.BusinessEx
 import com.ontravel.bookings.dto.CreateReservationInputDTO;
 import com.ontravel.bookings.dto.ReservationDTO;
 import com.ontravel.bookings.dto.UpdateReservationInputDTO;
+import com.ontravel.bookings.entity.Property;
 import com.ontravel.bookings.entity.Reservation;
 import com.ontravel.bookings.entity.enums.ReservationStatus;
 import com.ontravel.bookings.mapper.ReservationMapper;
+import com.ontravel.bookings.repository.PropertyRepository;
 import com.ontravel.bookings.repository.ReservationRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -24,16 +26,24 @@ public class ReservationService {
 	private final ReservationRepository repository;
 
 	private final ReservationMapper mapper;
+	
+	private final PropertyRepository propertyRepository;
 
+	
 	public List<ReservationDTO> findAll() {
 		return mapper.toDTO(repository.findAll());
 	}
 
 	public ReservationDTO create(CreateReservationInputDTO input) {
+		validateCreateInput(input);
+		var property = findPropertyById(input.getPropertyId());
+		var reservation = repository.save(mapper.inputToEntity(input, property));
+		return mapper.toDTO(reservation);
+	}
+
+	private void validateCreateInput(CreateReservationInputDTO input) {
 		PeriodValidator.validate(input.getStartDate(), input.getEndDate());
 		validateOverlappingDate(input.getStartDate(), input.getEndDate(), input.getPropertyId());
-		var property = repository.save(mapper.inputToEntity(input));
-		return mapper.toDTO(findById(property.getId()));
 	}
 
 	private void validateOverlappingDate(LocalDate startDate, LocalDate endDate, Long propertyId) {
@@ -64,12 +74,16 @@ public class ReservationService {
 	}
 
 	public ReservationDTO update(Long id, UpdateReservationInputDTO input) {
+		validateUpdateInput(id, input);
+		var property = findPropertyById(input.getPropertyId());
+		var entity = mapper.inputToEntity(input, id, property);
+		var reservation = repository.save(entity);
+		return mapper.toDTO(reservation);
+	}
+
+	private void validateUpdateInput(Long id, UpdateReservationInputDTO input) {
 		PeriodValidator.validate(input.getStartDate(), input.getEndDate());
 		validateOverlappingDate(input.getStartDate(), input.getEndDate(), input.getPropertyId(), id);
-
-		var entity = mapper.inputToEntity(input, id);
-		var property = repository.save(entity);
-		return mapper.toDTO(property);
 	}
 
 	public ReservationDTO cancel(Long id) {
@@ -85,8 +99,11 @@ public class ReservationService {
 	}
 
 	private Reservation findById(Long id) {
-		return repository.findById(id)
-				.orElseThrow(BusinessExceptionFactory::createEntityNotFound);
+		return repository.findById(id).orElseThrow(BusinessExceptionFactory::createEntityNotFound);
+	}
+	
+	private Property findPropertyById(Long id) {
+		return propertyRepository.findById(id).orElseThrow(BusinessExceptionFactory::createPropertyNotFound);
 	}
 
 }

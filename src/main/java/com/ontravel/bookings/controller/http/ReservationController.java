@@ -2,6 +2,8 @@ package com.ontravel.bookings.controller.http;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +31,7 @@ public class ReservationController {
 	
 	
 	@PostMapping
-	public ResponseEntity<ReservationDTO> create(@RequestBody CreateReservationInputDTO input) {
+	public ResponseEntity<ReservationDTO> create(@RequestBody @Valid CreateReservationInputDTO input) {
 		var created = service.create(input);
 		return ResponseEntity.status(HttpStatus.CREATED).body(created);
 	}
@@ -42,7 +44,7 @@ public class ReservationController {
 	@PutMapping("/{id}")
 	public ResponseEntity<ReservationDTO> update(
 			@PathVariable Long id, 
-			@RequestBody UpdateReservationInputDTO input) {
+			@RequestBody @Valid UpdateReservationInputDTO input) {
 		var updated = service.update(id, input);
 		return ResponseEntity.ok(updated);
 	}

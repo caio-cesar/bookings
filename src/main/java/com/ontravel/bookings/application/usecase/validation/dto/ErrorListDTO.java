@@ -2,8 +2,6 @@ package com.ontravel.bookings.application.usecase.validation.dto;
 
 import java.util.List;
 
-import com.ontravel.bookings.application.usecase.validation.exception.BusinessException;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -13,9 +11,13 @@ public class ErrorListDTO {
 
 	private List<ErrorMessageDTO> errors;
 	
-	public static ErrorListDTO from(BusinessException exception) {
+	public static ErrorListDTO from(RuntimeException exception) {
 		var error = ErrorMessageDTO.of(exception.getMessage());
 		return new ErrorListDTO(List.of(error));
 	}
 		
+	public static ErrorListDTO of(List<ErrorMessageDTO> errors) {
+		return new ErrorListDTO(errors);
+	}
+	
 }

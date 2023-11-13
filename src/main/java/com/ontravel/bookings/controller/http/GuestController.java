@@ -2,6 +2,8 @@ package com.ontravel.bookings.controller.http;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +26,7 @@ public class GuestController {
 	private GuestService service;
 	
 	@PostMapping
-	public ResponseEntity<GuestDTO> create(@RequestBody CreateGuestInputDTO input) {
+	public ResponseEntity<GuestDTO> create(@RequestBody @Valid CreateGuestInputDTO input) {
 		var created = service.create(input);
 		return ResponseEntity.status(HttpStatus.CREATED).body(created);
 	}

@@ -8,6 +8,10 @@ public class BusinessExceptionFactory {
 	public static EntityNotFoundException createEntityNotFound() {
 		return new EntityNotFoundException("Entity not found");
 	}
+	
+	public static EntityNotFoundException createPropertyNotFound() {
+		return new EntityNotFoundException("Property not found");
+	}
 
 	public static BusinessException createOverlappingDateException() {
 		return new OverlappingDateException("Unavailable period. Please choose a different one.");
