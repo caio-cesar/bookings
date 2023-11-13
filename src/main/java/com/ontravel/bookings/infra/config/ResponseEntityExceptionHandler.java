@@ -13,6 +13,7 @@ import com.ontravel.bookings.application.validation.dto.ErrorListDTO;
 import com.ontravel.bookings.application.validation.dto.ErrorMessageDTO;
 import com.ontravel.bookings.application.validation.exception.BusinessException;
 import com.ontravel.bookings.application.validation.exception.EntityNotFoundException;
+import com.ontravel.bookings.application.validation.exception.UsersNotFoundException;
 
 @ControllerAdvice
 public class ResponseEntityExceptionHandler {
@@ -23,8 +24,17 @@ public class ResponseEntityExceptionHandler {
 	}
 	
 	@ExceptionHandler(EntityNotFoundException.class) 
-	public ResponseEntity<ErrorListDTO> handleNotFound(BusinessException exception) {
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorListDTO.from(exception));
+	public ResponseEntity<ErrorListDTO> handleEntityNotFound(BusinessException exception) {
+		return notFound(exception);
+	}
+	
+	@ExceptionHandler(UsersNotFoundException.class) 
+	public ResponseEntity<ErrorListDTO> handleUsersNotFound(BusinessException exception) {
+		return notFound(exception);
+	}
+	
+	private ResponseEntity<ErrorListDTO> notFound(BusinessException exception) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorListDTO.from(exception)); 
 	}
 	
     @ExceptionHandler(MethodArgumentNotValidException.class)

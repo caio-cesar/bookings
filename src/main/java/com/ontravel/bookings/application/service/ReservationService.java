@@ -3,6 +3,7 @@ package com.ontravel.bookings.application.service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -158,8 +159,16 @@ public class ReservationService {
 		}
 	}
 	
-	private List<Guest> findAllGuestsById(Set<GuestDTO> guests) {
-		return guestRepository.findAllById(guests.stream().map(g -> g.getId()).toList());
+	private List<Guest> findAllGuestsById(Set<GuestDTO> guestsDTO) {
+		var ids = guestsDTO.stream().map(g -> g.getId()).toList();
+		var guests =  guestRepository.findAllById(ids);
+		var result = guests.stream().map(g -> g.getId()).collect(Collectors.toSet());
+		var notFound = ids.stream().filter(id -> !result.contains(id)).toList();
+		
+		if (!notFound.isEmpty()) {
+			throw BusinessExceptionFactory.createUsersNotFoundException(notFound);
+		}
+		return guests;
 	}
 	
 }

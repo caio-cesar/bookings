@@ -1,5 +1,7 @@
 package com.ontravel.bookings.application.validation.exception;
 
+import java.util.List;
+
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -31,6 +33,10 @@ public class BusinessExceptionFactory {
 	
 	public static BusinessException createInvalidRebookingException() {
 		return new InvalidPeriodException("Only active and cancelled reservations can be rebooked.");
+	}
+	
+	public static BusinessException createUsersNotFoundException(List<Long> ids) {
+		return new UsersNotFoundException("Users with ids " + ids + " were not found.");
 	}
 	
 	public static BusinessException create(String message) {
