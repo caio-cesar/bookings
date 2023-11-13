@@ -2,6 +2,7 @@ package com.ontravel.bookings.application.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,12 +10,15 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ontravel.bookings.application.validation.PeriodValidator;
 import com.ontravel.bookings.application.validation.exception.BusinessExceptionFactory;
 import com.ontravel.bookings.dto.CreateReservationInputDTO;
+import com.ontravel.bookings.dto.GuestDTO;
 import com.ontravel.bookings.dto.ReservationDTO;
 import com.ontravel.bookings.dto.UpdateReservationInputDTO;
+import com.ontravel.bookings.entity.Guest;
 import com.ontravel.bookings.entity.Property;
 import com.ontravel.bookings.entity.Reservation;
 import com.ontravel.bookings.entity.enums.ReservationStatus;
 import com.ontravel.bookings.mapper.ReservationMapper;
+import com.ontravel.bookings.repository.GuestRepository;
 import com.ontravel.bookings.repository.PropertyRepository;
 import com.ontravel.bookings.repository.ReservationRepository;
 
@@ -30,16 +34,21 @@ public class ReservationService {
 	
 	private final PropertyRepository propertyRepository;
 
+	private final GuestRepository guestRepository;
+	
 	
 	public List<ReservationDTO> findAll() {
 		return mapper.toDTO(repository.findAll());
 	}
-
+	
+	@Transactional
 	public ReservationDTO create(CreateReservationInputDTO input) {
 		validateCreateInput(input);
-		var property = findPropertyById(input.getPropertyId());
-		var reservation = repository.save(mapper.inputToEntity(input, property));
-		return mapper.toDTO(reservation);
+		var reservation = mapper.inputToEntity(
+				input, 
+				findPropertyById(input.getPropertyId()), 
+				findAllGuestsById(input.getGuests()));
+		return mapper.toDTO(repository.save(reservation));
 	}
 
 	private void validateCreateInput(CreateReservationInputDTO input) {
@@ -68,7 +77,6 @@ public class ReservationService {
 							ReservationStatus.ACTIVE, 
 							reservationId);
 
-
 		if (result.isPresent()) {
 			throw BusinessExceptionFactory.createOverlappingDateException();
 		}
@@ -76,10 +84,12 @@ public class ReservationService {
 
 	public ReservationDTO update(Long id, UpdateReservationInputDTO input) {
 		validateUpdateInput(id, input);
-		var property = findPropertyById(input.getPropertyId());
-		var entity = mapper.inputToEntity(input, id, property);
-		var reservation = repository.save(entity);
-		return mapper.toDTO(reservation);
+		var entity = mapper.inputToEntity(
+				input, 
+				id, 
+				findPropertyById(input.getPropertyId()),
+				findAllGuestsById(input.getGuests()));
+		return mapper.toDTO(repository.save(entity));
 	}
 
 	private void validateUpdateInput(Long id, UpdateReservationInputDTO input) {
@@ -98,13 +108,20 @@ public class ReservationService {
 		var reservation = findById(id);
 		validateRebookInput(input);
 		validateRebookStatus(reservation);
-		var property = findPropertyById(input.getPropertyId());
-		var entity = mapper.inputToEntity(input, property);
+		return mapper.toDTO(saveRebookedEntity(input, reservation));
+	}
+
+	private Reservation saveRebookedEntity(UpdateReservationInputDTO input, Reservation reservation) {
+		var entity = mapper.inputToEntity(
+				input, 
+				findPropertyById(input.getPropertyId()),
+				findAllGuestsById(input.getGuests()));
+		
 		entity = repository.save(entity);
 		reservation.setStatus(ReservationStatus.REBOOKED);
 		reservation.setRebooked(entity);
 		repository.save(reservation);
-		return mapper.toDTO(entity);
+		return entity;
 	}
 
 	private void validateRebookStatus(Reservation reservation) {
@@ -136,9 +153,13 @@ public class ReservationService {
 	}
 	
 	private void validateEntityNotFound(Long id) {
-		if (!repository.existsById(id)) {
+		if (! repository.existsById(id)) {
 			throw BusinessExceptionFactory.createEntityNotFound();
 		}
+	}
+	
+	private List<Guest> findAllGuestsById(Set<GuestDTO> guests) {
+		return guestRepository.findAllById(guests.stream().map(g -> g.getId()).toList());
 	}
 	
 }

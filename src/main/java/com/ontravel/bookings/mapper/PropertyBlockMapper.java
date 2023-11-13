@@ -22,8 +22,8 @@ public interface PropertyBlockMapper {
 	@Mapping(target = "property", source = "property")
 	PropertyBlock inputToEntity(CreatePropertyBlockInputDTO input, Property property);
 	
-	@Mapping(target = "id", ignore = true)
+	@Mapping(target = "id", source="id")
 	@Mapping(target = "property", source = "property")
-	PropertyBlock inputToEntity(UpdatePropertyBlockInputDTO input, Property property);
+	PropertyBlock inputToEntity(UpdatePropertyBlockInputDTO input, Long id, Property property);
 	
 }

@@ -41,7 +41,7 @@ public class PropertyBlockService {
 	public PropertyBlockDTO update(Long id, UpdatePropertyBlockInputDTO input) {
 		validateUpdateInput(id, input);
 		var property = findPropertyById(input.getPropertyId());
-		var entity = mapper.inputToEntity(input, property);
+		var entity = mapper.inputToEntity(input, id, property);
 		return saveAndConvertToDTO(entity);
 	}
 
